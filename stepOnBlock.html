@@ -41,30 +41,30 @@
                 }
                 else if(strs[0]=='T'){//Time (時間)
                     document.getElementById("countDown").innerHTML = strs[1];
-                    if(strs[1]==0){
+                    if(strs[1]==0){//如果時間到了，停止遊戲並顯示遊戲結束
                         alert("遊戲結束！");
-                        game_over = true;
-                        //console.log(p1Status);//console.log(p2Status);
+                        game_over = true;//console.log(p1Status);//console.log(p2Status);
+
                         //結算分數
                         var p1Score= p1Status.length;
                         var p2Score= p2Status.length;
                         if(p1Score > p2Score){// player1 勝利
-                            alert("player1 勝利！");
+                            alert("1號玩家勝利！");
                         }else if(p1Score == p2Score){ //平手
                             alert("平手！");
                         }else{// player2 勝利
-                            alert("player2 勝利！");
+                            alert("2號玩家勝利！");
                         }
                     }
                 }else if(strs[0]=='U'){//Update (更新)：更新格子資訊
                     let player = document.getElementById('player').value;
-                    document.getElementById('PID').innerHTML = player;
+                    document.getElementById('PID').innerHTML = "你是："+player+"號玩家";
                     console.log(player);
-                    cellID=strs[1]; //格子的ID
-                    cellSign=strs[2]; //該玩家使用的符號
-                    cellDefense=strs[3];//格子當時的防禦值
-                    player=strs[4];//玩家
-                    updStatus(cellDefense, cellID);
+                    player=strs[1];//玩家(更新者)
+                    cellSign=strs[2]; //更新者(玩家)使用的符號
+                    cellID=strs[3]; //更新格子的ID
+                    cellDefense=strs[4];//當時格子的防禦值
+                    updStatus(cellDefense, cellID);//更新地域現況
                     setCell(cellID,cellSign,cellDefense,player) //改變格子的符號
                 }
             };
@@ -74,7 +74,7 @@
         }
     }
 
-    function updStatus(defenseInt, cellID){//紀錄雙方 player的佔地情況
+    function updStatus(defenseInt, cellID){// 紀錄/更新雙方 player的佔地情況
         if(defenseInt > 0){ //p1 佔領
             if(!p1Status.includes(cellID)){// p1Status沒有一樣的cellID，寫入p1Status 中。
                 p1Status.push(cellID);
@@ -93,27 +93,8 @@
             }
         }
     }
-
-    var intervalId; // 宣告變數 intervalId 用來儲存計時器
-    function start() {
-        countDownTime = 10; // 設定倒數計時 30 秒
-        s.send("S"+","+0);
-        match();
-        intervalId = setInterval(function() { // 每 1 秒執行一次以下函式
-        countDownTime -= 1; // 每次將 timer 減 1
-        document.getElementById("countDown").innerHTML = countDownTime; // 更新畫面上的計時器
-        s.send("T,"+countDownTime);
-        if (countDownTime == 0) { // 如果計時器到達 0
-        // 停止遊戲並顯示遊戲結束
-            clearInterval(intervalId); // 停止計時器
-           //alert("遊戲結束！");
-            //game_over = true;
-        }
-        }, 1000); // 1000 毫秒 = 1 秒
-        
-        
-    }
-    game_over = false;
+    
+    game_over = false;//遊戲是否結束
     function match(){
         const cells = document.querySelectorAll(".cell");
         
@@ -121,39 +102,55 @@
         cells.forEach(function(el) {
             el.onclick=function(){ //點擊時確認
                 if( !(game_over)){ //如果遊戲沒結束 //console.log("game_on")
-                    id=this.id;
-                    let defense = document.getElementById(id).getAttribute("defense");//獲得 defense值
-                    parseInt(defense);//console.log(defense);
-                    //取得玩家所使用的符號
-                    let mySign = document.getElementById('sign').value;
-                    let player = document.getElementById('player').value;
-                    
-                    //把格子的id跟使用符號，用訊息傳給socket server
-                    if(player=="1"){
+                blockId=this.id;
+                let defense = document.getElementById(blockId).getAttribute("defense");//獲得 defense值
+                parseInt(defense);//console.log(defense);
+                //取得玩家所使用的符號
+                let plyrSign = document.getElementById('sign').value;
+                let player = document.getElementById('player').value;
+                
+                //把格子的id跟使用符號，用訊息傳給socket server
+                if(player=="1"){
                         defense++;
-                        s.send("U"+","+id+","+mySign+","+defense+","+player);
+                        s.send("U"+","+player+","+plyrSign+","+blockId+","+defense);
                     }
                     else if(player=="2"){
                         defense--;
-                        s.send("U"+","+id+","+mySign+","+defense+","+player);
+                        s.send("U"+","+player+","+plyrSign+","+blockId+","+defense);
                     }
                 }
             }
         });
     }
-
-    function setCell(id,sign,defense,player) {
+    
+    function setCell(id,plyrSign,defense,player) {
         document.getElementById(id).setAttribute("defense",defense);
         if(player==1&&parseInt(defense)>0){
-            document.getElementById(id).innerHTML = sign;
+            document.getElementById(id).innerHTML = plyrSign;
         }
         else if(player==2&&parseInt(defense)<0){
-            document.getElementById(id).innerHTML = sign;
+            document.getElementById(id).innerHTML = plyrSign;
         }
         else if(parseInt(defense)==0){
             document.getElementById(id).innerHTML =".";
         }
         //ce.value=sign;
+    }
+
+    var timeNow; // 宣告變數 timeNow 用來儲存計時器
+    function start() {
+        countDownTime = 30; // 設定倒數計時 30 秒
+        s.send("S"+","+0);
+        match();
+        timeNow = setInterval(function() { // 每 1 秒執行一次以下函式
+            countDownTime -= 1; // 每次將 countDownTime 減少 1秒
+            document.getElementById("countDown").innerHTML = countDownTime; // 更新畫面上的計時器
+            s.send("T,"+countDownTime);
+            if (countDownTime == 0) { // 如果計時器到達 0，停止計時器
+            clearInterval(timeNow);
+            }
+        }, 1000); // 1000 毫秒 = 1 秒
+        
     }
 </script>
 <body onload="doInit()">
@@ -161,25 +158,25 @@
     輸入使用的符號<input type='text' value='O' id='sign'><br/>
     你是幾號玩家<input type='text' required='required' placeholder='1 or 2' id='player'><br/>
     <!-- <select id='player'><option>請選擇玩家名...</option><option>P1</option><option>P2</option></select> -->
-    你是：<div id="PID"></div><br/>
+    <div id="PID">你是：</div><br/>
     剩餘時間：<div id="countDown">30</div><br/>
     <button id="start" type="button" onclick="start()">開始遊戲</button>
     <table border="1" width="500px" height="500px">
     <tr><td class='cell' id='00' defense='0'>.</td><td  class='cell' id='10' defense='0'>.</td>
-        <td  class='cell' id='20' defense='0'>.</td>
-        <td  class='cell' id='30' defense='0'>.</td><td  class='cell' id='40' defense='0'>.</td></tr>
+        <td  class='cell' id='20' defense='0'>.</td><td  class='cell' id='30' defense='0'>.</td>
+        <td  class='cell' id='40' defense='0'>.</td></tr>
     <tr><td class='cell' id='01' defense='0'>.</td><td  class='cell' id='11' defense='0'>.</td>
-        <td  class='cell' id='21' defense='0'>.</td>
-        <td  class='cell' id='31' defense='0'>.</td><td  class='cell' id='41' defense='0'>.</td></tr>
+        <td  class='cell' id='21' defense='0'>.</td><td  class='cell' id='31' defense='0'>.</td>
+        <td  class='cell' id='41' defense='0'>.</td></tr>
     <tr><td class='cell' id='02' defense='0'>.</td><td  class='cell' id='12' defense='0'>.</td>
-        <td  class='cell' id='22' defense='0'>.</td>
-        <td  class='cell' id='32' defense='0'>.</td><td  class='cell' id='42' defense='0'>.</td></tr>
+        <td  class='cell' id='22' defense='0'>.</td><td  class='cell' id='32' defense='0'>.</td>
+        <td  class='cell' id='42' defense='0'>.</td></tr>
     <tr><td class='cell' id='03' defense='0'>.</td><td  class='cell' id='13' defense='0'>.</td>
-        <td  class='cell' id='23' defense='0'>.</td>
-        <td  class='cell' id='33' defense='0'>.</td><td  class='cell' id='43' defense='0'>.</td></tr>
+        <td  class='cell' id='23' defense='0'>.</td><td  class='cell' id='33' defense='0'>.</td>
+        <td  class='cell' id='43' defense='0'>.</td></tr>
     <tr><td class='cell' id='04' defense='0'>.</td><td  class='cell' id='14' defense='0'>.</td>
-        <td  class='cell' id='24' defense='0'>.</td>
-        <td  class='cell' id='34' defense='0'>.</td><td  class='cell' id='44' defense='0'>.</td></tr>
+        <td  class='cell' id='24' defense='0'>.</td><td  class='cell' id='34' defense='0'>.</td>
+        <td  class='cell' id='44' defense='0'>.</td></tr>
     </table>
 </body>
 </html>

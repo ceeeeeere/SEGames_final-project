@@ -31,6 +31,6 @@ loop = asyncio.new_event_loop() #get an event loop
 asyncio.set_event_loop(loop) #set the event loop to asyncio
 
 loop.run_until_complete(
-	websockets.serve(handler, 'localhost', 4545) #setup the websocket service and handler
-	) #hook to localhost:4545
+	websockets.serve(handler, '192.168.31.142', 4545) #setup the websocket service and handler
+	) #hook to localhost:4545 ( ipconfig=>無線、無遮罩、IPv4 : 4545)
 loop.run_forever() #keep it running

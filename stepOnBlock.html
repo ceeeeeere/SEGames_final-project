@@ -111,8 +111,8 @@
                 
                 //把格子的id跟使用符號，用訊息傳給socket server
                 if(player=="1"){
-                        defense++;
-                        s.send("U"+","+player+","+plyrSign+","+blockId+","+defense);
+                    defense++;
+                    s.send("U"+","+player+","+plyrSign+","+blockId+","+defense);
                     }
                     else if(player=="2"){
                         defense--;
@@ -136,24 +136,28 @@
         }
         //ce.value=sign;
     }
-
+    
     var timeNow; // 宣告變數 timeNow 用來儲存計時器
+    game_start = false;
     function start() {
-        countDownTime = 30; // 設定倒數計時 30 秒
-        s.send("S"+","+0);
-        match();
-        timeNow = setInterval(function() { // 每 1 秒執行一次以下函式
-            countDownTime -= 1; // 每次將 countDownTime 減少 1秒
-            document.getElementById("countDown").innerHTML = countDownTime; // 更新畫面上的計時器
-            s.send("T,"+countDownTime);
-            if (countDownTime == 0) { // 如果計時器到達 0，停止計時器
-            clearInterval(timeNow);
-            }
-        }, 1000); // 1000 毫秒 = 1 秒
-        
+        if (!game_start){
+            game_start = true;
+            countDownTime = 30; // 設定倒數計時 30 秒
+            s.send("S"+","+0);
+            match();
+            timeNow = setInterval(function() { // 每 1 秒執行一次以下函式
+                countDownTime -= 1; // 每次將 countDownTime 減少 1秒
+                document.getElementById("countDown").innerHTML = countDownTime; // 更新畫面上的計時器
+                s.send("T,"+countDownTime);
+                if (countDownTime == 0) { // 如果計時器到達 0，停止計時器
+                    clearInterval(timeNow);
+                }
+            }, 1000); // 1000 毫秒 = 1 秒
+            
+        }
     }
-</script>
-<body onload="doInit()">
+    </script>
+    <body onload="doInit()">
     搶地遊戲<br/>
     輸入使用的符號<input type='text' value='O' id='sign'><br/>
     你是幾號玩家<input type='text' required='required' placeholder='1 or 2' id='player'><br/>
@@ -164,19 +168,32 @@
     <table border="1" width="500px" height="500px">
     <tr><td class='cell' id='00' defense='0'>.</td><td  class='cell' id='10' defense='0'>.</td>
         <td  class='cell' id='20' defense='0'>.</td><td  class='cell' id='30' defense='0'>.</td>
-        <td  class='cell' id='40' defense='0'>.</td></tr>
+        <td  class='cell' id='40' defense='0'>.</td><td  class='cell' id='50' defense='0'>.</td>
+        <td  class='cell' id='60' defense='0'>.</td></tr>
     <tr><td class='cell' id='01' defense='0'>.</td><td  class='cell' id='11' defense='0'>.</td>
         <td  class='cell' id='21' defense='0'>.</td><td  class='cell' id='31' defense='0'>.</td>
-        <td  class='cell' id='41' defense='0'>.</td></tr>
+        <td  class='cell' id='41' defense='0'>.</td><td  class='cell' id='51' defense='0'>.</td>
+        <td  class='cell' id='61' defense='0'>.</td></tr>
     <tr><td class='cell' id='02' defense='0'>.</td><td  class='cell' id='12' defense='0'>.</td>
         <td  class='cell' id='22' defense='0'>.</td><td  class='cell' id='32' defense='0'>.</td>
-        <td  class='cell' id='42' defense='0'>.</td></tr>
+        <td  class='cell' id='42' defense='0'>.</td><td  class='cell' id='52' defense='0'>.</td>
+        <td  class='cell' id='62' defense='0'>.</td></tr>
     <tr><td class='cell' id='03' defense='0'>.</td><td  class='cell' id='13' defense='0'>.</td>
-        <td  class='cell' id='23' defense='0'>.</td><td  class='cell' id='33' defense='0'>.</td>
-        <td  class='cell' id='43' defense='0'>.</td></tr>
+        <td  class='cell' id='23' defense='0'>.</td><td  class='cell' id='33' defense='0'>.</td+>
+        <td  class='cell' id='23' defense='0'>.</td><td  class='cell' id='53' defense='0'>.</td>
+        <td  class='cell' id='63' defense='0'>.</td></tr>
     <tr><td class='cell' id='04' defense='0'>.</td><td  class='cell' id='14' defense='0'>.</td>
         <td  class='cell' id='24' defense='0'>.</td><td  class='cell' id='34' defense='0'>.</td>
-        <td  class='cell' id='44' defense='0'>.</td></tr>
+        <td  class='cell' id='44' defense='0'>.</td><td  class='cell' id='54' defense='0'>.</td>
+        <td  class='cell' id='64' defense='0'>.</td></tr>
+    <tr><td class='cell' id='05' defense='0'>.</td><td  class='cell' id='15' defense='0'>.</td>
+        <td  class='cell' id='25' defense='0'>.</td><td  class='cell' id='35' defense='0'>.</td>
+        <td  class='cell' id='45' defense='0'>.</td><td  class='cell' id='55' defense='0'>.</td>
+        <td  class='cell' id='65' defense='0'>.</td></tr>
+    <tr><td class='cell' id='06' defense='0'>.</td><td  class='cell' id='16' defense='0'>.</td>
+        <td  class='cell' id='26' defense='0'>.</td><td  class='cell' id='36' defense='0'>.</td>
+        <td  class='cell' id='46' defense='0'>.</td><td  class='cell' id='56' defense='0'>.</td>
+        <td  class='cell' id='66' defense='0'>.</td></tr>
     </table>
 </body>
 </html>

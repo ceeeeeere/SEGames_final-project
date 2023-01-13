@@ -19,7 +19,8 @@
     var p2Status = [];
     function doInit() {
         try {
-            var host = "ws://192.168.31.142:4545/"; //設定socker server的ip:port (ipconfig 無線、無遮罩)
+            var host = "ws://192.168.0.106:4545/"; //設定socker server的ip:port (ipconfig 無線、無遮罩、IPv4 : 4545)
+            //預設 localhost:4545
             /*if(window.location.hostname) {
                 host = "ws://" + window.location.hostname + ":4545/";
             }*/
@@ -57,8 +58,6 @@
                         }
                     }
                 }else if(strs[0]=='U'){//Update (更新)：更新格子資訊
-                    let player = document.getElementById('player').value;
-                    document.getElementById('PID').innerHTML = "你是："+player+"號玩家";
                     console.log(player);
                     player=strs[1];//玩家(更新者)
                     cellSign=strs[2]; //更新者(玩家)使用的符號
@@ -142,6 +141,8 @@
     function start() {
         if (!game_start){
             game_start = true;
+            let player = document.getElementById('player').value;//抓取玩家號資料
+            document.getElementById('PID').innerHTML = "你是："+player+"號玩家";//顯示你是幾號玩家
             countDownTime = 30; // 設定倒數計時 30 秒
             s.send("S"+","+0);
             match();

@@ -153,7 +153,7 @@
             game_start = true;
             let player = document.getElementById('player').value;//抓取玩家號資料
             document.getElementById('PID').innerHTML = "你是："+player+"號玩家";//顯示你是幾號玩家
-            countDownTime = 5; // 設定倒數計時 30 秒
+            countDownTime = 30; // 設定倒數計時 30 秒
             s.send("S"+","+0);
             match();
             timeNow = setInterval(function() { // 每 1 秒執行一次以下函式

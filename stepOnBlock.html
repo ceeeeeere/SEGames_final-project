@@ -41,7 +41,7 @@
                     match();
                 }
                 else if(strs[0]=='T'){//Time (時間)
-                    document.getElementById("countDown").innerHTML = strs[1];
+                    document.getElementById("countDown").innerHTML = "剩餘時間：" + strs[1];
                     if(strs[1]==0){//如果時間到了，停止遊戲並顯示遊戲結束
                         alert("遊戲結束！");
                         game_over = true;//console.log(p1Status);//console.log(p2Status);
@@ -50,12 +50,13 @@
                         var p1Score= p1Status.length;
                         var p2Score= p2Status.length;
                         if(p1Score > p2Score){// player1 勝利
-                            alert("1號玩家勝利！");
+                            alert("1號玩家勝利！占總地格為："+p1Score);
                         }else if(p1Score == p2Score){ //平手
                             alert("平手！");
                         }else{// player2 勝利
-                            alert("2號玩家勝利！");
+                            alert("2號玩家勝利！占總地格為："+p2Score);
                         }
+                        document.getElementById("countDown").innerHTML = "剩餘時間：0 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp結果： P1佔"+p1Score+"格；P2佔"+p2Score+"格";
                     }
                 }else if(strs[0]=='U'){//Update (更新)：更新格子資訊
                     console.log(player);
@@ -143,7 +144,7 @@
             game_start = true;
             let player = document.getElementById('player').value;//抓取玩家號資料
             document.getElementById('PID').innerHTML = "你是："+player+"號玩家";//顯示你是幾號玩家
-            countDownTime = 30; // 設定倒數計時 30 秒
+            countDownTime = 10; // 設定倒數計時 30 秒
             s.send("S"+","+0);
             match();
             timeNow = setInterval(function() { // 每 1 秒執行一次以下函式
@@ -163,38 +164,59 @@
     輸入使用的符號<input type='text' value='O' id='sign'><br/>
     你是幾號玩家<input type='text' required='required' placeholder='1 or 2' id='player'><br/>
     <!-- <select id='player'><option>請選擇玩家名...</option><option>P1</option><option>P2</option></select> -->
-    <div id="PID">你是：</div><br/>
-    剩餘時間：<div id="countDown">30</div><br/>
+    <div id="PID">你是：</div>
+    <div id="countDown">剩餘時間：30</div><br/>
     <button id="start" type="button" onclick="start()">開始遊戲</button>
-    <table border="1" width="500px" height="500px">
-    <tr><td class='cell' id='00' defense='0'>.</td><td  class='cell' id='10' defense='0'>.</td>
-        <td  class='cell' id='20' defense='0'>.</td><td  class='cell' id='30' defense='0'>.</td>
-        <td  class='cell' id='40' defense='0'>.</td><td  class='cell' id='50' defense='0'>.</td>
-        <td  class='cell' id='60' defense='0'>.</td></tr>
-    <tr><td class='cell' id='01' defense='0'>.</td><td  class='cell' id='11' defense='0'>.</td>
-        <td  class='cell' id='21' defense='0'>.</td><td  class='cell' id='31' defense='0'>.</td>
-        <td  class='cell' id='41' defense='0'>.</td><td  class='cell' id='51' defense='0'>.</td>
-        <td  class='cell' id='61' defense='0'>.</td></tr>
-    <tr><td class='cell' id='02' defense='0'>.</td><td  class='cell' id='12' defense='0'>.</td>
-        <td  class='cell' id='22' defense='0'>.</td><td  class='cell' id='32' defense='0'>.</td>
-        <td  class='cell' id='42' defense='0'>.</td><td  class='cell' id='52' defense='0'>.</td>
-        <td  class='cell' id='62' defense='0'>.</td></tr>
-    <tr><td class='cell' id='03' defense='0'>.</td><td  class='cell' id='13' defense='0'>.</td>
-        <td  class='cell' id='23' defense='0'>.</td><td  class='cell' id='33' defense='0'>.</td+>
-        <td  class='cell' id='43' defense='0'>.</td><td  class='cell' id='53' defense='0'>.</td>
-        <td  class='cell' id='63' defense='0'>.</td></tr>
-    <tr><td class='cell' id='04' defense='0'>.</td><td  class='cell' id='14' defense='0'>.</td>
-        <td  class='cell' id='24' defense='0'>.</td><td  class='cell' id='34' defense='0'>.</td>
-        <td  class='cell' id='44' defense='0'>.</td><td  class='cell' id='54' defense='0'>.</td>
-        <td  class='cell' id='64' defense='0'>.</td></tr>
-    <tr><td class='cell' id='05' defense='0'>.</td><td  class='cell' id='15' defense='0'>.</td>
-        <td  class='cell' id='25' defense='0'>.</td><td  class='cell' id='35' defense='0'>.</td>
-        <td  class='cell' id='45' defense='0'>.</td><td  class='cell' id='55' defense='0'>.</td>
-        <td  class='cell' id='65' defense='0'>.</td></tr>
-    <tr><td class='cell' id='06' defense='0'>.</td><td  class='cell' id='16' defense='0'>.</td>
-        <td  class='cell' id='26' defense='0'>.</td><td  class='cell' id='36' defense='0'>.</td>
-        <td  class='cell' id='46' defense='0'>.</td><td  class='cell' id='56' defense='0'>.</td>
-        <td  class='cell' id='66' defense='0'>.</td></tr>
+    <table border="1" width="560px" height="560px">
+    <tr><td class='cell' id='00' defense='0' width="80px" height="80px" align="center">.</td>
+        <td class='cell' id='10' defense='0' width="80px" height="80px" align="center">.</td>
+        <td class='cell' id='20' defense='0' width="80px" height="80px" align="center">.</td>
+        <td class='cell' id='30' defense='0' width="80px" height="80px" align="center">.</td>
+        <td class='cell' id='40' defense='0' width="80px" height="80px" align="center">.</td>
+        <td class='cell' id='50' defense='0' width="80px" height="80px" align="center">.</td>
+        <td class='cell' id='60' defense='0' width="80px" height="80px" align="center">.</td></tr>
+    <tr><td class='cell' id='01' defense='0' align="center">.</td>
+        <td class='cell' id='11' defense='0' align="center">.</td>
+        <td class='cell' id='21' defense='0' align="center">.</td>
+        <td class='cell' id='31' defense='0' align="center">.</td>
+        <td class='cell' id='41' defense='0' align="center">.</td>
+        <td class='cell' id='51' defense='0' align="center">.</td>
+        <td class='cell' id='61' defense='0' align="center">.</td></tr>
+    <tr><td class='cell' id='02' defense='0' align="center">.</td>
+        <td class='cell' id='12' defense='0' align="center">.</td>
+        <td class='cell' id='22' defense='0' align="center">.</td>
+        <td class='cell' id='32' defense='0' align="center">.</td>
+        <td class='cell' id='42' defense='0' align="center">.</td>
+        <td class='cell' id='52' defense='0' align="center">.</td>
+        <td class='cell' id='62' defense='0' align="center">.</td></tr>
+    <tr><td class='cell' id='03' defense='0' align="center">.</td>
+        <td class='cell' id='13' defense='0' align="center">.</td>
+        <td class='cell' id='23' defense='0' align="center">.</td>
+        <td class='cell' id='33' defense='0' align="center">.</td>
+        <td class='cell' id='43' defense='0' align="center">.</td>
+        <td class='cell' id='53' defense='0' align="center">.</td>
+        <td class='cell' id='63' defense='0' align="center">.</td></tr>
+    <tr><td class='cell' id='04' defense='0' align="center">.</td>
+        <td class='cell' id='14' defense='0' align="center">.</td>
+        <td class='cell' id='24' defense='0' align="center">.</td>
+        <td class='cell' id='34' defense='0' align="center">.</td>
+        <td class='cell' id='44' defense='0' align="center">.</td>
+        <td class='cell' id='54' defense='0' align="center">.</td>
+        <td class='cell' id='64' defense='0' align="center">.</td></tr>
+    <tr><td class='cell' id='05' defense='0' align="center">.</td>
+        <td class='cell' id='15' defense='0' align="center">.</td>
+        <td class='cell' id='25' defense='0' align="center">.</td>
+        <td class='cell' id='35' defense='0' align="center">.</td>
+        <td class='cell' id='45' defense='0' align="center">.</td>
+        <td class='cell' id='55' defense='0' align="center">.</td>
+        <td class='cell' id='65' defense='0' align="center">.</td></tr>
+    <tr><td class='cell' id='06' defense='0' align="center">.</td>
+        <td class='cell' id='16' defense='0' align="center">.</td>
+        <td class='cell' id='26' defense='0' align="center">.</td>
+        <td class='cell' id='36' defense='0' align="center">.</td>
+        <td class='cell' id='46' defense='0' align="center">.</td>
+        <td class='cell' id='56' defense='0' align="center">.</td>
+        <td class='cell' id='66' defense='0' align="center">.</td></tr>
     </table>
 </body>
 </html>

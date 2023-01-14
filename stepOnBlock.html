@@ -110,19 +110,19 @@
         cells.forEach(function(el) {
             el.onclick=function(){ //點擊時確認
                 if( !(game_over)){ //如果遊戲沒結束 //console.log("game_on")
-                blockId=this.id;
-                let defense = document.getElementById(blockId).getAttribute("defense");//獲得 defense值
-                parseInt(defense);//console.log(defense);
-                //取得玩家所使用的符號
-                let plyrSign = document.getElementById('sign').value;
-                let player = document.getElementById('player').value;
+                    blockId=this.id;
+                    let defense = document.getElementById(blockId).getAttribute("defense");//獲得 defense值
+                    parseInt(defense);//console.log(defense);
+                    //取得玩家所使用的符號
+                    let plyrSign = document.getElementById('sign').value;
+                    let player = document.getElementById('player').value;//抓取玩家號資料
+                    document.getElementById('PID').innerHTML = "你是："+player+"號玩家";//顯示你是幾號玩家
                 
-                //把格子的id跟使用符號，用訊息傳給socket server
-                if(player=="1"){
-                    defense++;
-                    s.send("U"+","+player+","+plyrSign+","+blockId+","+defense);
-                    }
-                    else if(player=="2"){
+                    //把格子的id跟使用符號，用訊息傳給socket server
+                    if(player=="1"){
+                        defense++;
+                        s.send("U"+","+player+","+plyrSign+","+blockId+","+defense);
+                    }else if(player=="2"){
                         defense--;
                         s.send("U"+","+player+","+plyrSign+","+blockId+","+defense);
                     }
@@ -151,8 +151,6 @@
     function start() {
         if (!game_start){
             game_start = true;
-            let player = document.getElementById('player').value;//抓取玩家號資料
-            document.getElementById('PID').innerHTML = "你是："+player+"號玩家";//顯示你是幾號玩家
             countDownTime = 30; // 設定倒數計時 30 秒
             s.send("S"+","+0);
             match();
